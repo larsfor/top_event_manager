@@ -31,6 +31,14 @@ def save_thank_you_letter(id, form_letter)
   end
 end
 
+def clean_phone_numbers(number)
+  /(\d+)\D{0,}(\d+)?\D{0,}(\d+)?/.match(number)
+  phone = "#{Regexp.last_match(1)}#{Regexp.last_match(2)}#{Regexp.last_match(3)}"
+  return 'Bad number' if phone.length < 10 || (phone.length == 11 && phone[0] != '1') || phone.length > 11
+
+  phone
+end
+
 puts 'EventManager initialized.'
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new(template_letter)
@@ -48,5 +56,8 @@ contents.each do |row|
   legislators = legislators_by_zipcode(zipcode)
   form_letter = erb_template.result(binding)
 
-  save_thank_you_letter(id, form_letter)
+  number = row[:homephone]
+  puts clean_phone_numbers(number)
+
+  # save_thank_you_letter(id, form_letter)
 end
