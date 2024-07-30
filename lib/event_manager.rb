@@ -39,6 +39,14 @@ def clean_phone_numbers(number)
   phone
 end
 
+def get_time(date)
+  Time.strptime(date, '%m/%d/%y %H:%M').hour
+end
+
+def get_day_of_week(date)
+  Date.strptime(date, '%m/%d/%y').wday
+end
+
 puts 'EventManager initialized.'
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new(template_letter)
@@ -57,7 +65,9 @@ contents.each do |row|
   form_letter = erb_template.result(binding)
 
   number = row[:homephone]
-  puts clean_phone_numbers(number)
+  # phone = clean_phone_numbers(number)
+  puts get_time(row[:regdate])
+  puts get_day_of_week(row[:regdate])
 
   # save_thank_you_letter(id, form_letter)
 end
